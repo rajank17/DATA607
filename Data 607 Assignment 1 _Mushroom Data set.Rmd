@@ -1,0 +1,161 @@
+---
+title: "Data 607_Assignment 1"
+author: "Krishna Rajan"
+date: "2/5/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## R Markdown
+
+
+```{R}
+
+## Obtain Data from the link 
+theURL <- "https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data"
+mushrooms <- read.table(theURL, header = FALSE,  sep = ",", stringsAsFactors = FALSE);
+write.table(mushrooms, file = "Mushroom.csv", sep = ",");
+
+## overview of the table
+dim(mushrooms)
+
+##defining columns & selecting first 10 columns & 100 rows for transformation 
+mushrooms <- mushrooms[1:100, c(1:10)]
+names(mushrooms) <- c("class", "cap-shape", "cap-surface", "cap-color","bruises" , "odor","gill-attachment","gill-spacing","gill-size","gill-color");
+
+"this is how the DATASET looks like after after trimming data set "
+head(mushrooms)
+
+##Decode data in first 10 columns 
+
+#Function decodes the class data
+transformClassData <- function(key){
+  switch (key,
+    'p' = 'poisonous',
+    'e' = 'edible'
+  )
+}
+
+#function decodes the cap-shape column
+transformCapShapeData <- function(key){
+  switch (key,
+          'b' = 'bell',
+          'c' = 'conical',
+          'x' = 'convex',
+          'f' = 'flat',
+          'k' = 'knobbed',
+          's' = 'sunken'
+  )
+}
+
+#function decodes the cap-surface column
+transformCapSurfaceData <- function(key){
+  switch (key,
+          'f' = 'fibrous',
+          'g' = 'grooves',
+          'y' = 'scaly',
+          's' = 'smooth'
+  )
+}
+
+#function decodes the cap-color column
+transformCapColorData <- function(key){
+  switch (key,
+          'n' = 'brown',
+          'b' = 'buff',
+          'c' = 'cinnamon',
+          'g' = 'gray',
+          'r' = 'green',
+          'p' = 'pink',
+          'u' = 'purple',
+          'e' = 'red',
+          'w' = 'white',
+          'y' = 'yellow'
+  )
+}
+#funciton decodes Bruises column
+transformBruisesData<-function(key){
+  switch (key,
+         't' = 'bruises',
+         'f' = 'no'
+  )
+}
+#function decodes the odor column
+transformOdorData <- function(key){
+  switch (key,
+          'a' = 'almond',
+          'l' = 'anise',
+          'c' = 'creosote',
+          'y' = 'fishy',
+          'f' = 'foul',
+          'm' = 'musty',
+          'n' = 'none',
+          'p' = 'pungent',
+          's' = 'spicy'
+  )
+}
+#function decodes the gill-attachment column
+transformGillAttachmentData <- function(key){
+  switch (key,
+          'a' = 'attached',
+          'd' = 'descending',
+          'f' = 'free',
+          'n' = 'notched'
+  )
+}
+
+#function decodes the gill-spacing column
+transformGillSpacingData <- function(key){
+  switch (key,
+          'c' = 'close',
+          'w' = 'crowded',
+          'd' = 'distant'
+  )
+}
+#function decodes the gill-size column
+transformGillSizeData <- function(key){
+  switch (key,
+          'b' = 'broad',
+          'n' = 'narrow'
+  )
+}
+#function decodes the gill-color column
+transformGillColorData <- function(key){
+  switch (key,
+          'k' = 'black',
+          'b' = 'buff',
+          'h' = 'chocolate',
+          'g' = 'grey',
+          'r' = 'green',
+          'o' = 'orange',
+          'n' = 'brown',
+          'p' = 'pink',
+          'u' = 'purple',
+          'e' = 'red',
+          'w' = 'white',
+          'y' = 'yellow'
+  )
+}
+##applying codes to dataset
+mushrooms$class <- sapply(mushrooms$class, transformClassData);
+mushrooms$`cap-shape` <- sapply(mushrooms$`cap-shape`, transformCapShapeData);
+mushrooms$`cap-color` <- sapply(mushrooms$`cap-color`, transformCapColorData);
+mushrooms$`cap-surface` <- sapply(mushrooms$`cap-surface`, transformCapSurfaceData);
+mushrooms$bruises <- sapply(mushrooms$bruises, transformBruisesData);
+mushrooms$odor <- sapply(mushrooms$odor, transformOdorData);
+mushrooms$`gill-attachment` <- sapply(mushrooms$`gill-attachment`, transformGillAttachmentData);
+mushrooms$`gill-spacing` <- sapply(mushrooms$`gill-spacing`, transformGillSpacingData);
+mushrooms$`gill-size` <- sapply(mushrooms$`gill-size`, transformGillSizeData);
+mushrooms$`gill-color` <- sapply(mushrooms$`gill-color`, transformGillColorData);
+
+##Dataset with decoded data
+mushrooms
+
+```
+
+
+
+
+
+
