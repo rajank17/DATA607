@@ -1,0 +1,63 @@
+---
+library(RMySQL)title: DATA607_Assignment1_Rajan
+output:
+  pdf_document: default
+  html_document: default
+---
+##Loading required packages to access to data from SQL tables to R
+```{r} 
+library(RMySQL)
+library(dplyr)
+library(dbplyr)
+library(httr)
+
+## Connect to Local MYSQL database
+
+rdfl <- DBI::dbConnect(RMySQL::MySQL(), dbname = "ratemovie", user="root", password="root")
+
+## Database Info
+src_dbi(rdfl)
+
+## Read Movie Table
+
+movie <- tbl(rdfl, sql("SELECT ID, movie FROM movie"))
+
+##Review Rating & Reviewer Table
+
+review_rate <- tbl(rdfl, sql("SELECT ID, Reviewer,Rating FROM review_rate"))
+
+##Join Movie table & Review_)Rate table
+
+movie_rating <- tbl(rdfl, sql("SELECT a.Reviewer, a.Rating, b.movie FROM review_rate a JOIN movie b ON a.ID = b.ID"))
+
+## Reading joined table in R as Data Frame
+movie_rating_df <- as.data.frame(movie_rating)
+
+
+## Dimension of new combined data frame in R
+
+dim(movie_rating_df)
+
+##output combined data table in R
+movie_rating_df
+
+##Query to find out average rating of movies
+
+sql <- "SELECT Movie.Movie,AVG(review_rate.rating)
+FROM review_rate
+INNER JOIN Movie ON (Movie.ID = review_rate.ID)
+GROUP BY Movie"
+theAVGReviewMovie <- suppressWarnings(dbGetQuery(rdfl, sql))
+print(theAVGReviewMovie)
+
+##Query to find out average rating of reviewer of all movies.
+
+sql <- "SELECT review_rate.Reviewer,AVG(review_rate.Rating) FROM review_rate GROUP BY Reviewer"
+theReviewerAVG <- suppressWarnings(dbGetQuery(rdfl, sql))
+print(theReviewerAVG)
+
+
+
+```
+
+        
